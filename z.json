@@ -1,0 +1,106 @@
+{
+    "$schema": "https://mintlify.com/schema.json",
+    "name": "Nueborder Documentation",
+    "logo": {
+      "dark": "/logo/dark.svg",
+      "light": "/logo/light.svg"
+    },
+    "favicon": "/favicon.svg",
+    "colors": {
+      "primary": "#0D9373",
+      "light": "#07C983",
+      "dark": "#0D9373",
+      "anchors": {
+        "from": "#0D9373",
+        "to": "#07C983"
+      }
+    },
+    "topbarLinks": [
+      {
+        "name": "Support",
+        "url": "mailto:jack@nueborder.com"
+      }
+    ],
+    "topbarCtaButton": {
+      "name": "Dashboard",
+      "url": "nueborder.com/dashboard"
+    },
+    "tabs": [
+      {
+        "name": "API Reference",
+        "url": "api-reference"
+      },
+      {
+        "name": "Changelog",
+        "url": "changelog"
+      }
+    ],
+  
+      "anchors": [
+        {
+          "name": "API Reference",
+          "openapi": "/api-reference/openapi.yaml",
+          "url": "/api-reference",
+          "icon": "square-terminal"
+        }
+      ],
+  
+    "navigation": [
+      {
+        "group": "Introduction",
+        "pages": [
+          "introduction/overview",
+          "introduction/prerequisites",
+          "introduction/purpose"
+        ]
+      },
+  
+      {
+        "group": "Authentication",
+        "pages": [
+          "auth/overview",
+          "auth/quickstart"
+        ]
+      },
+          {
+        "group": "Authentication",
+        "pages": [
+          "auth/overview",
+          "auth/quickstart"
+        ]
+      },
+      {
+        "group": "Authentication",
+        "pages": [
+          "auth/overview",
+          "auth/quickstart"
+        ]
+      },
+      
+      {
+        "group": "EU CBAM",
+        "pages": [
+          "eu_cbam/markdown",
+          "eu_cbam/code",
+          "eu_cbam/images",
+          "eu_cbam/settings",
+          "eu_cbam/navigation",
+          "eu_cbam/reusable-snippets"
+        ]
+      },
+      
+      {
+        "group": "API Documentation",
+        "pages": [
+          "api-reference/introduction"
+        ]
+      },
+      
+      {
+        "group": "Changelog",
+        "pages": ["changelog/changelog"]
+      }
+    ]
+  
+  }
+  
