@@ -16,24 +16,358 @@
         "version": "1.0"
     },
     "paths": {
-
-       
-        "/{customerId}/{reportId}/{itemId}/documents": {
+        "/v1/companies/{company_id}/forecast": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Updates an existing record or inserts new documents for an imported good based on the provided customer and report IDs.",
+                "description": "Fetches the forecast data for carbon-tax based on the provided company ID.",
                 "tags": [
-                    "Documents"
+                    "Forecast"
                 ],
-                "summary": "Get Document",
+                "summary": "Retrieve Carbon-Tax Forecast Data",
                 "parameters": [
                     {
-                        "description": "Customer ID associated with the imported good documents",
-                        "name": "customerId",
+                        "description": "Unique identifier of the company",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forecast data successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: missing or invalid company ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error: unable to retrieve forecast data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Adjusts the forecast settings for carbon-tax calculations using the provided configuration.",
+                "tags": [
+                    "Forecast"
+                ],
+                "summary": "Update Forecast Settings",
+                "parameters": [
+                    {
+                        "description": "Unique identifier of the company",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/models.ForecastSetting"
+                            }
+                        }
+                    },
+                    "description": "Forecast settings configuration",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Forecast settings updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid forecast settings provided",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Generates a new report ID and creates an entry in the database for the general report based on the company ID.",
+                "tags": [
+                    "General Report"
+                ],
+                "summary": "Create General Report",
+                "parameters": [
+                    {
+                        "example": "\"12345\"",
+                        "description": "Company ID for which the report is created",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created the general report\" example({\"status\": \"created\", \"message\": \"Report created successfully\", \"data\": {\"report_id\": \"generated-uuid\"}})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Occurs when the company_id is missing in the URL\" example({\"status\": \"error\", \"message\": \"Missing company ID\"})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Database error while creating the report\" example({\"status\": \"error\", \"message\": \"Internal server error\"})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/upload/excel": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload an Excel EU CBAM report file and returns the newly generated report ID.",
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Upload Excel",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "description": "Excel report file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "required": [
+                                    "file"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Report created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid file upload request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error processing Excel file upload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/upload/xml": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload an EU CBAM XML report file and returns the newly generated report ID.",
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Upload XML",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "description": "XML report file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "required": [
+                                    "file"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Report created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid file upload request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error processing XML file upload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/{report_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves general report information from the database based on URL params :company_id and :report_id.",
+                "tags": [
+                    "General Report"
+                ],
+                "summary": "Get General Report",
+                "parameters": [
+                    {
+                        "example": "\"12345\"",
+                        "description": "Company ID associated with the general report",
+                        "name": "company_id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -41,8 +375,872 @@
                         }
                     },
                     {
-                        "description": "Report ID associated with the imported good documents",
-                        "name": "reportId",
+                        "example": "\"67890\"",
+                        "description": "Report ID associated with the general report",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved general report information\" example({\"status\": \"success\", \"data\": {...}})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/flat.QReportType"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Occurs when the company_id or report_id is missing or invalid\" example({\"status\": \"error\", \"message\": \"Invalid parameters\"})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal database error, possibly due to network or data integrity issues\" example({\"status\": \"error\", \"message\": \"Internal server error\"})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Inserts or updates a general report's information in the database based on URL params :company_id, :report_id, and the provided payload.",
+                "tags": [
+                    "General Report"
+                ],
+                "summary": "Update General Report",
+                "parameters": [
+                    {
+                        "example": "\"12345\"",
+                        "description": "Company ID associated with the general report",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "example": "\"67890\"",
+                        "description": "Report ID associated with the general report",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/flat.QReportType"
+                            }
+                        }
+                    },
+                    "description": "General report information payload",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "General report information successfully updated\" example({\"status\": \"success\", \"message\": \"Updated successfully\", \"data\": {...}})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Occurs when the JSON payload is missing or malformed\" example({\"status\": \"error\", \"message\": \"Invalid JSON payload\"})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error in the provided payload, such as missing required fields\" example({\"status\": \"error\", \"message\": \"Validation error\", \"errors\": {...}})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal database error, possibly due to network or data integrity issues\" example({\"status\": \"error\", \"message\": \"Internal server error\"})",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/{report_id}/goods/emissions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves goods emissions data for the specified company and report.",
+                "tags": [
+                    "Good Emissions"
+                ],
+                "summary": "Get Emissions",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the goods emissions",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the goods emissions",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Goods emissions data retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.GetImportedGoodsEmissionsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error retrieving goods emissions data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates an existing record or inserts new goods emissions data for the specified company and report.",
+                "tags": [
+                    "Good Emissions"
+                ],
+                "summary": "Update Emissions",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the goods emissions",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the goods emissions",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/flat.GoodsEmissionsType"
+                            }
+                        }
+                    },
+                    "description": "Goods emissions data",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated or inserted goods emissions data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating/inserting goods emissions data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/{report_id}/goods/params": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves parameters for imported goods in an EU CBAM report using the specified company and report IDs.",
+                "tags": [
+                    "Emissions Goods"
+                ],
+                "summary": "Get Parameters",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the imported goods parameters",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the imported goods parameters",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Imported goods parameters retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.GetProdMethodQualifyingParamsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error retrieving imported goods parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates or inserts parameters for imported goods in an EU CBAM report based on the provided company and report IDs.",
+                "tags": [
+                    "Emissions Goods"
+                ],
+                "summary": "Update Parameters",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the imported goods parameters",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the imported goods parameters",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/flat.QualifyingParametersType"
+                            }
+                        }
+                    },
+                    "description": "Payload containing imported goods parameters",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated or inserted imported goods parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating/inserting imported goods parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/{report_id}/goods/quantity": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves imported goods quantity data for the specified company and report.",
+                "tags": [
+                    "Goods Quantity"
+                ],
+                "summary": "Get Quantity",
+                "parameters": [
+                    {
+                        "description": "Company ID associated with the goods quantity data",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Report ID associated with the goods quantity data",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Goods quantity data retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.GetImportedGoodsQuantityResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error retrieving goods quantity data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates an existing record or inserts new imported goods quantity data for the specified company and report.",
+                "tags": [
+                    "Goods Quantity"
+                ],
+                "summary": "Update Quantity",
+                "parameters": [
+                    {
+                        "description": "Company ID associated with the goods quantity data",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Report ID associated with the goods quantity data",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/flat.ImportedQuantityType"
+                            }
+                        }
+                    },
+                    "description": "Imported goods quantity data payload",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated or inserted goods quantity data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating/inserting goods quantity data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/{report_id}/imported-good": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves the details of an imported good based on the provided company ID and report ID.",
+                "tags": [
+                    "Imported Good"
+                ],
+                "summary": "Get Good",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the imported good",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the imported good",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details of the imported good",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.GetImportedGoodsGeneralResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request is missing or contains an invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred while retrieving the imported good",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates an existing imported good record or creates a new one using the provided company ID and report ID. The request body must include a valid JSON payload describing the imported good.",
+                "tags": [
+                    "Imported Good"
+                ],
+                "summary": "Update Good",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the imported good",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the imported good",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/flat.ImportedGoodType"
+                            }
+                        }
+                    },
+                    "description": "JSON payload containing the imported good data",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The imported good was updated or inserted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request is missing or contains invalid parameters or payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred while updating/inserting the imported good",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new imported good record using the company ID and report ID provided in the route parameters.",
+                "tags": [
+                    "Imported Good"
+                ],
+                "summary": "New Good",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the imported good",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the imported good",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The imported good was created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request is missing or contains an invalid company_id or report_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An error occurred while creating the imported good",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/companies/{company_id}/reports/{report_id}/items/{item_id}/documents": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves the documents for an imported good based on the provided company ID, report ID, and item ID.",
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Get Document",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the imported good documents",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the imported good documents",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the item associated with the imported good documents",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Documents retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid company_id, report_id, or item_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.JSONPayloadErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error retrieving imported good documents",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates an existing record or inserts new documents for an imported good based on the provided company ID, report ID, and item ID. The request body must include a valid JSON payload describing the supporting documents.",
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Update Document",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the company associated with the imported good documents",
+                        "name": "company_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the report associated with the imported good documents",
+                        "name": "report_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Unique identifier for the item associated with the imported good documents",
+                        "name": "item_id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -73,7 +1271,7 @@
                         }
                     },
                     "400": {
-                        "description": "Missing or invalid customerId or reportId",
+                        "description": "Missing or invalid company_id, report_id, or item_id",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -93,31 +1291,60 @@
                         }
                     }
                 }
-            },
-            "put": {
+            }
+        },
+        "/v1/customers": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Updates an existing record or inserts new documents for an imported good based on the provided customer and report IDs.",
+                "description": "Retrieves a list of all customers.",
                 "tags": [
-                    "Documents"
+                    "Customer"
                 ],
-                "summary": "Update Document",
-                "parameters": [
-                    {
-                        "description": "Customer ID associated with the imported good documents",
-                        "name": "customerId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "summary": "List Customers",
+                "responses": {
+                    "200": {
+                        "description": "List of customers retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.ListCustomerResponse"
+                                }
+                            }
                         }
                     },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/models.InternalServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/customers/{customer_id}": {
+            "get": {
+                "security": [
                     {
-                        "description": "Report ID associated with the imported good documents",
-                        "name": "reportId",
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves a customer based on the provided customer ID.",
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Get Customer",
+                "parameters": [
+                    {
+                        "description": "Unique identifier for the customer",
+                        "name": "customer_id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -127,17 +1354,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully updated or inserted imported good documents",
+                        "description": "Customer retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/models.SuccessResponse"
+                                    "$ref": "#/components/schemas/models.GetCustomerResponse"
                                 }
                             }
                         }
                     },
                     "400": {
-                        "description": "Missing or invalid customerId or reportId",
+                        "description": "Missing or invalid customer ID",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -147,7 +1374,7 @@
                         }
                     },
                     "500": {
-                        "description": "Error updating/inserting imported good documents",
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1141,6 +2368,75 @@
                     }
                 }
             },
+            "models.Customer": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "description": "Customer email address",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "Unique identifier for the customer",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Customer name",
+                        "type": "string"
+                    }
+                }
+            },
+            "models.ForecastSetting": {
+                "description": "Forecast Setting defines configuration parameters.",
+                "type": "object",
+                "properties": {
+                    "carbonPrice": {
+                        "description": "Carbon price.",
+                        "type": "number",
+                        "example": 15
+                    },
+                    "discount": {
+                        "description": "Discount rate.",
+                        "type": "number",
+                        "example": 0.1
+                    },
+                    "importRegion": {
+                        "description": "Region for the settings.",
+                        "type": "string",
+                        "enum": [
+                            "EU"
+                        ],
+                        "example": "EU"
+                    },
+                    "reportingPeriod": {
+                        "description": "Reporting period.",
+                        "type": "string",
+                        "example": "Q1"
+                    },
+                    "year": {
+                        "description": "Year for the settings.",
+                        "type": "integer",
+                        "example": 2023
+                    },
+                    "yoyChange": {
+                        "description": "Year-over-year change.",
+                        "type": "number",
+                        "example": 0.05
+                    }
+                }
+            },
+            "models.GetCustomerResponse": {
+                "type": "object",
+                "properties": {
+                    "customer": {
+                        "description": "The customer record",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/models.Customer"
+                            }
+                        ]
+                    }
+                }
+            },
             "models.GetImportedGoodsEmissionsResponse": {
                 "description": "Returns emissions-related information that is required to calculate the carbon footprint for EU CBAM submissions.",
                 "type": "object",
@@ -1258,6 +2554,22 @@
                         "description": "HTTP status code.",
                         "type": "integer",
                         "example": 400
+                    }
+                }
+            },
+            "models.ListCustomerResponse": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "description": "Total number of customers returned",
+                        "type": "integer"
+                    },
+                    "customers": {
+                        "description": "Slice of customer records",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/models.Customer"
+                        }
                     }
                 }
             },

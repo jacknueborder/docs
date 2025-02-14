@@ -31,7 +31,7 @@
               "development"
             ]
           }
-          
+
         ]
       },
       {
@@ -44,20 +44,13 @@
             ]
           },
           {
-            "group": "General",
-            "openapi": {
-              "source": "api-reference/general.json",
-              "directory": "api-reference"
-            }
-          },
-          {
             "group": "EU CBAM",
             "openapi": {
               "source": "api-reference/openapi.json",
               "directory": "api-reference"
             }
           }
-          
+
         ]
       }
     ]
