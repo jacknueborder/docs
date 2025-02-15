@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Mint Starter Kit",
   "colors": {
-    "primary": "#4D6EFF",
-    "light": "#4D6EFF",
-    "dark": "#4D6EFF"
+    "primary": "#565860",
+    "light": "#565860",
+    "dark": "#565860"
   },
   "favicon": "favicon.png",
   "navigation": {
@@ -15,23 +15,14 @@
         "groups": [
 
           {
-            "group": "Overview",
+            "group": "About",
             "pages": [
               "introduction/overview",
               "introduction/climate",
               "introduction/cbam",
               "introduction/purpose"
             ]
-          },
-          {
-            "group": "Quick Start",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "development"
-            ]
           }
-
         ]
       },
       {
@@ -40,7 +31,9 @@
           {
             "group": "API Documentation",
             "pages": [
-              "api-reference/introduction"
+              "eu_cbam/quickstart",
+              "eu_cbam/concepts",
+              "eu_cbam/version"
             ]
           },
           {

@@ -1393,13 +1393,13 @@
     },
     "servers": [
         {
-            "url": "//nueborder.com/api/v1"
+            "url": "https://nueborder.com/api/v1"
         }
     ],
     "components": {
         "securitySchemes": {
             "BearerAuth": {
-                "description": "Provide your Bearer token in the format: Bearer <token>",
+                "description": "Provide your Bearer token in the format: Bearer <your_api_key>",
                 "type": "apiKey",
                 "name": "Authorization",
                 "in": "header"
@@ -2576,6 +2576,7 @@
             "models.SuccessResponse": {
                 "description": "A standard successful API response.",
                 "type": "object",
+
                 "properties": {
                     "message": {
                         "description": "A detailed success message.",
