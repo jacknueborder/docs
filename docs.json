@@ -19,8 +19,7 @@
             "pages": [
               "introduction/overview",
               "introduction/climate",
-              "introduction/cbam",
-              "introduction/purpose"
+              "introduction/cbam"
             ]
           }
         ]
@@ -31,7 +30,6 @@
           {
             "group": "API Documentation",
             "pages": [
-              "eu_cbam/quickstart",
               "eu_cbam/concepts",
               "eu_cbam/version"
             ]

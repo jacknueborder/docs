@@ -1480,7 +1480,7 @@
                         "example": "EMU1"
                     },
                     "installation": {
-                        "description": "()",
+                        "description": "",
                         "allOf": [
                             {
                                 "$ref": "#/components/schemas/flat.InstallationType"
@@ -1488,7 +1488,7 @@
                         ]
                     },
                     "installation_operator": {
-                        "description": "()",
+                        "description": "",
                         "allOf": [
                             {
                                 "$ref": "#/components/schemas/flat.InstallationOperatorType"
@@ -1593,12 +1593,12 @@
                         "example": "760900"
                     },
                     "importer_address_city": {
-                        "description": "The city where the Declarant is located. The city where the Declarant is located. The city where the importer is located. The city where the Declarant is located. The city where the importer is located. The city where the operator is located. (Min Length: 1, Max Length: 35)",
+                        "description": "The city where the importer is located. The city where the operator is located. (Min Length: 1, Max Length: 35)",
                         "type": "string",
                         "example": "Declarant city"
                     },
                     "importer_address_country": {
-                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established (either a Member state of the EU or a third country). (either a Member state of the EU or a third country). (Min Length: 2, Max Length: 2)",
+                        "description": "The country where the Importer is established (Min Length: 2, Max Length: 2)",
                         "type": "string",
                         "example": "BE"
                     },
@@ -1636,12 +1636,12 @@
                         "example": "TR"
                     },
                     "representative_address_city": {
-                        "description": "The city where the Declarant is located. The city where the Declarant is located. The city where the importer is located. The city where the Declarant is located. The city where the importer is located. The city where the operator is located. (Min Length: 1, Max Length: 35)",
+                        "description": "The city where the Reprentative is located. (Min Length: 1, Max Length: 35)",
                         "type": "string",
                         "example": "Declarant city"
                     },
                     "representative_address_country": {
-                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established (either a Member state of the EU or a third country). (either a Member state of the EU or a third country). (Min Length: 2, Max Length: 2)",
+                        "description": "The country where the Indirect customs representative is established  (Min Length: 2, Max Length: 2)",
                         "type": "string",
                         "example": "BE"
                     },
@@ -1780,7 +1780,7 @@
                         }
                     },
                     "country": {
-                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established (either a Member state of the EU or a third country). (either a Member state of the EU or a third country). (Min Length: 2, Max Length: 2)",
+                        "description": "The country where the Installation is established. (Min Length: 2, Max Length: 2)",
                         "type": "string",
                         "example": "BE"
                     },
@@ -2000,7 +2000,7 @@
                         "example": "Declarant city"
                     },
                     "declarant_actor_address_country": {
-                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established (either a Member state of the EU or a third country). (either a Member state of the EU or a third country). (Min Length: 2, Max Length: 2)",
+                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established  . (Min Length: 2, Max Length: 2)",
                         "type": "string",
                         "example": "BE"
                     },
@@ -2020,7 +2020,7 @@
                         "example": "Declarant city"
                     },
                     "importer_address_country": {
-                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established (either a Member state of the EU or a third country). (either a Member state of the EU or a third country). (Min Length: 2, Max Length: 2)",
+                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established  . (Min Length: 2, Max Length: 2)",
                         "type": "string",
                         "example": "BE"
                     },
@@ -2053,7 +2053,7 @@
                         "example": "Declarant city"
                     },
                     "representative_address_country": {
-                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established (either a Member state of the EU or a third country). (either a Member state of the EU or a third country). (Min Length: 2, Max Length: 2)",
+                        "description": "The country where the Declarant is established The country where the Indirect customs representative is established The country where the Importer is established The country where the Indirect customs representative is established The country where the Importer is established  . (Min Length: 2, Max Length: 2)",
                         "type": "string",
                         "example": "BE"
                     },
@@ -2073,7 +2073,7 @@
                         "example": "01"
                     },
                     "signatures": {
-                        "description": "()",
+                        "description": "",
                         "allOf": [
                             {
                                 "$ref": "#/components/schemas/flat.SignaturesType"
@@ -2216,12 +2216,12 @@
                 ],
                 "properties": {
                     "global_data_confirmation": {
-                        "description": "This element holds the confirmation of the Declarant regarding the information of the CBAM Report. ()",
+                        "description": "This element holds the confirmation of the Declarant regarding the information of the CBAM Report.",
                         "type": "boolean",
                         "example": true
                     },
                     "other_applicable_reporting_methodology": {
-                        "description": "This element is used to hold the Position of the Declarant ()",
+                        "description": "This element is used to hold the Position of the Declarant ",
                         "type": "boolean",
                         "example": true
                     },
@@ -2241,7 +2241,7 @@
                         "example": "Place of signature"
                     },
                     "use_of_data_confirmation": {
-                        "description": "This element holds the confirmation of the Declarant regarding his approval to use the data of the CBAM Report for the review process. ()",
+                        "description": "This element holds the confirmation of the Declarant regarding his approval to use the data of the CBAM Report for the review process.",
                         "type": "boolean",
                         "example": true
                     }
@@ -2260,7 +2260,7 @@
                 ],
                 "properties": {
                     "binary": {
-                        "description": "The actual binary object. The actual binary object. ()",
+                        "description": "The actual binary object. The actual binary object.",
                         "type": "array",
                         "items": {
                             "type": "integer"
